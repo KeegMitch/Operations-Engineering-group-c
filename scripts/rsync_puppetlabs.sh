@@ -39,7 +39,7 @@ sudo tar -czvf "$backup_dir/$archive_name" "$puppet_dir" >> $log_file
 
 # rsync into backup server
 
-sudo rsync -av --link-dest=/home/group-c/rsync_backup -e "ssh -i /home/group-c/.ssh/id_rsa" /etc/puppetlabs group-c@backup-c:~/rsync_backup
+sudo rsync -av --link-dest=/home/group-c/rsync_backup -e "ssh -i /home/group-c/.ssh/id_rsa" "$backup_dir" group-c@backup-c:~/rsync_backup
 
 # rsync into storage server
 
