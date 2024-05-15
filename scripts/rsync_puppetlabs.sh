@@ -39,11 +39,11 @@ sudo tar -czvf "$backup_dir/$archive_name" "$puppet_dir" >> $log_file
 
 # rsync into backup server
 
-sudo rsync -av --link-dest=/home/group-c/rsync_backup -e "ssh -i /home/group-c/.ssh/id_rsa" "$backup_dir" group-c@backup-c:~/rsync_backup
+sudo rsync -avz --link-dest=/home/group-c/rsync_backup -e "ssh -i /home/group-c/.ssh/id_rsa" "$backup_dir" group-c@backup-c:~/rsync_backup
 
 # rsync into storage server
 
-
+sudo rsync -avz --link-dest=/home/group-c/rsync_backup -e "ssh -i /home/group-c/.ssh/id_rsa_offsite" "$backup_dir" group-c@20.211.153.89:~/mgmt-c/rsync_backup
 
 exit_status=$?
 
