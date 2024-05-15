@@ -23,6 +23,9 @@ for db in $databases; do
 	
 	# sudo rsync -av -e "ssh -i /home/group-c/.ssh/id_rsa" "~/owncloud.sql" group-c@backup-c:~/
 	# sudo rsync -av ~/owncloud.sql group-c@backup-c:~/
+	
+	# scp just for testing
+	sudo scp 
     
     # Remove local backup file
     sudo rm "$db.sql"
