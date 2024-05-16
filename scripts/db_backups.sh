@@ -1,8 +1,19 @@
 #!/bin/bash
 
 # Prompt for MySQL password, which we need to automate
-read -s -p "Enter MySQL password: " mysql_password
-echo
+# read -s -p "Enter MySQL password: " mysql_password
+# echo
+
+source "$HOME/.env"
+
+# Retrieve MySQL password from environment variable
+mysql_password="$MYSQL_PASSWORD"
+
+# Check if MySQL password environment variable is set
+if [ -z "$mysql_password" ]; then
+    echo "Error: MySQL password environment variable not set. Please set the MYSQL_PASSWORD environment variable before running the script." >&2
+    exit 1
+fi
 
 log_file="dbbackup_log.log"
 
@@ -15,7 +26,7 @@ backup_host="backup-c"
 storage_server="20.211.153.89"
 storage_host="offsite"
 
-remote_directory="/home/$remote_username"
+remote_directory="/home/$remote_username/database_backup"
 storage_directory="/home/$remote_username/db-c"
 
 
@@ -42,7 +53,7 @@ echo "Backup Log $(date +"%Y-%m-%d %H:%M:%S")" > "$log_file"
 for db in $databases; do
 
  # Create backup file
-    sudo mysqldump "$db" > "$db.sql" || handle_error "Failed to create MySQL dump for database $db"
+    sudo mysqldump "$db" -p"$mysql_password" > "$db.sql" || handle_error "Failed to create MySQL dump for database $db"
     log_message "Created MySQL dump for database $db"
 
     # Rsync to BACKUP server
