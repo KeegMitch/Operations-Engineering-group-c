@@ -55,7 +55,7 @@ echo "Backup Log $(date +"%Y-%m-%d %H:%M:%S")" > "$log_file"
 for db in $databases; do
 
  # Create backup file
-    sudo mysqldump "$db" -p"$mysql_password" > "$db.sql" || handle_error "Failed to create MySQL dump for database $db"
+    sudo mysqldump "$db" -p"$mysql_password" > "$HOME/$db.sql" || handle_error "Failed to create MySQL dump for database $db"
     log_message "Created MySQL dump for database $db"
 
     # Rsync to STORAGE server

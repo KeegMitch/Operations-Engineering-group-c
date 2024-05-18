@@ -1,0 +1,30 @@
+# Note that our times are for when the systems are in NZST, default is UTC, so 12am UTC time is 12pm NZST
+
+We also have different times for our manual scripts and our Puppet scripts, so they all run about 4 times a day (every 6 hours)
+
+
+
+# mgmt-c server
+
+For our manual one this will backup from 12am NZST:
+0 */6 * * * /home/group-c/rsync_puppetlabs.sh > mgmt_cron.log
+
+puppet: 
+
+
+
+# db-c server
+
+manual: 0 2,8,14,20 * * * /home/group-c/db_backup.sh > db_cron.log 2>&1
+puppet:
+
+
+# app-c server
+
+manual:
+puppet:
+
+# backup-c server
+
+manual:
+puppet:
