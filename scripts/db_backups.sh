@@ -25,6 +25,8 @@ backup_host="backup-c"
 
 storage_server="20.211.153.89"
 storage_host="offsite"
+user="group-c"
+
 
 remote_directory="/home/$remote_username/database_backup"
 storage_directory="/home/$remote_username/db-c"
@@ -36,7 +38,7 @@ databases=$(sudo mysql -e "SHOW DATABASES;" | grep -Ev "(Database|information_sc
 # Function to handle errors
 handle_error() {
     echo "Error: $1"
-	echo "$(date +"%Y-%m-%d %H:%M:%S") - Error: $1" >> "$log_file"
+        echo "$(date +"%Y-%m-%d %H:%M:%S") - Error: $1" >> "$log_file"
     exit 1
 }
 
@@ -56,6 +58,13 @@ for db in $databases; do
     sudo mysqldump "$db" -p"$mysql_password" > "$db.sql" || handle_error "Failed to create MySQL dump for database $db"
     log_message "Created MySQL dump for database $db"
 
+    # Rsync to STORAGE server
+    if ! sudo rsync -av -e "ssh -i /home/group-c/.ssh/id_rsa_db_storage" "$HOME/$db.sql" "$user@$storage_server:$storage_directory/"; then
+        handle_error "Failed to rsync backup to $storage_host"
+    fi
+    log_message "Rsynced backup to $storage_host"
+
+
     # Rsync to BACKUP server
     if sudo rsync -av -e "ssh -i /home/group-c/.ssh/id_rsa_db_1" "$HOME/$db.sql" "$remote_username@$backup_host:$remote_directory/"; then
         log_message "Rsynced backup to $backup_host"
@@ -66,21 +75,15 @@ for db in $databases; do
         handle_error "Failed to rsync backup to $backup_host"
     fi
 
-    # Rsync to STORAGE server (commented out for testing)
-    #if ! sudo rsync -av -e "ssh -i /home/group-c/.ssh/id_rsa_db_offsite" "$HOME/$db.sql" "$remote_username@$storage_host:$storage_directory/"; then
-    #    handle_error "Failed to rsync backup to $storage_host"
-    #fi
-    #log_message "Rsynced backup to $storage_host"
 
-	
 done
 
 echo "Backup process completed successfully"
 log_message "Backup process completed successfully"
 
-# Manual testing commands 
+# Manual testing commands
 # sudo rsync -av -e "ssh -i /home/group-c/.ssh/id_rsa_db_1" "$HOME/owncloud.sql" group-c@backup-c:~
-# sudo rsync -av -e "ssh -i /home/group-c/.ssh/id_rsa_db_offsite" "$HOME/owncloud.sql" group-c@20.211.153.89:~/db-c
+# sudo rsync -av -e "ssh -i /home/group-c/.ssh/id_rsa_db_storage" "$HOME/owncloud.sql" group-c@20.211.153.89:~/db-c
 
 # sudo mysqldump -e -p owncloud > owncloud_backup.sql
 # sudo mysqldump -e -p --all-databases > db_backupv2.sql
