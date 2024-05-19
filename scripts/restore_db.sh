@@ -26,17 +26,19 @@ log_message() {
     echo "$(date +"%Y-%m-%d %H:%M:%S") - $1" >> "$log_file"
 }
 
-# Initialize log file
+
 echo "Restore Log $(date +"%Y-%m-%d %H:%M:%S")" > "$log_file"
 
-# Prompt for the database name
-read -p "Enter the name of the database to restore: " db_name
-if [ -z "$db_name" ]; then
-    handle_error "No database name provided."
+# Check if the correct number of arguments is provided
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <database_name> <backup_file>"
+    exit 1
 fi
 
-# Prompt for the backup file location
-read -p "Enter the path to the backup file: " backup_file
+db_name="$1"
+backup_file="$2"
+
+# Check if the backup file exists
 if [ ! -f "$backup_file" ]; then
     handle_error "Backup file does not exist: $backup_file"
 fi
@@ -53,3 +55,6 @@ log_message "Successfully restored database $db_name from $backup_file."
 echo "Database restoration completed successfully."
 log_message "Database restoration completed successfully."
 
+# run the script with arguments
+
+# ./restore_db.sh owncloud ./owncloud.sql
