@@ -69,7 +69,6 @@ for db in $databases; do
     if sudo rsync -av -e "ssh -i /home/group-c/.ssh/id_rsa_db_1" "$HOME/$db.sql" "$remote_username@$backup_host:$remote_directory/"; then
         log_message "Rsynced backup to $backup_host"
         # Remove local backup file if rsync succeeded
-        sudo rm "$db.sql" || handle_error "Failed to remove local backup file $db.sql"
         log_message "Removed local backup file $db.sql"
     else
         handle_error "Failed to rsync backup to $backup_host"
