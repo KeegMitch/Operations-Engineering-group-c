@@ -48,12 +48,12 @@ fi
 
 # Cleanup: Optionally remove the local tarball after transfer
 # Uncomment the following lines if you want to remove the local backup file after transfer
-# log "Cleaning up local backup file..."
-# if rm $BACKUP_FILE; then
-#     log "Local backup file $BACKUP_FILE removed successfully."
-# else
-#     log "Error removing local backup file $BACKUP_FILE."
-#     exit 1
-# fi
+ log "Cleaning up local backup file..."
+ if rm $BACKUP_FILE; then
+     log "Local backup file $BACKUP_FILE removed successfully."
+ else
+     log "Error removing local backup file $BACKUP_FILE."
+     exit 1
+fi
 
 log "Backup process completed successfully."
