@@ -25,8 +25,9 @@ if sudo chown -R group-c:group-c "$HOME_DIR"; then
     # Find and change permissions for directories
     find "$HOME_DIR" -type d -exec sudo chmod 700 {} \;
     
-    # Find and change permissions for files
-    find "$HOME_DIR" -type f -exec sudo chmod 600 {} \;
+    # Find and change permissions for files (except not change permissions for script itself)
+    find "$HOME_DIR" -type f ! -name "$(basename "$0")" -exec sudo chmod 600 {} \;
+
     
     log "Changed ownership and permissions for $HOME_DIR."
 else
