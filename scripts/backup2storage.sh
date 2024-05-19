@@ -21,7 +21,13 @@ log "Backup process started."
 
 # Change ownership and permissions of the home directory
 log "Changing ownership and permissions of the home directory..."
-if sudo chown -R group-c:group-c "$HOME_DIR" && sudo chmod -R 700 "$HOME_DIR"; then
+if sudo chown -R group-c:group-c "$HOME_DIR"; then
+    # Find and change permissions for directories
+    find "$HOME_DIR" -type d -exec sudo chmod 700 {} \;
+    
+    # Find and change permissions for files
+    find "$HOME_DIR" -type f -exec sudo chmod 600 {} \;
+    
     log "Changed ownership and permissions for $HOME_DIR."
 else
     log "Error changing ownership or permissions for $HOME_DIR."
