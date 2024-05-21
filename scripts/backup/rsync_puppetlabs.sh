@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # Define source directories
@@ -64,7 +63,7 @@ fi
 
 # following commands in sudo crontab (runs 4 times a day or every 6 hours):
 # HOME=/home/group-c
-# 0 0,6,12,18 * * * home/group-c/rsync_puppetlabs.sh > /logs/cron.log
+# 0 0,6,12,18 * * * home/group-c/rsync_puppetlabs.sh > /logs/mgmt_cron.log
 # or this syntax
-# 0 */6 * * * home/group-c/rsync_puppetlabs.sh > /logs/cron.log
+# 0 */6 * * * home/group-c/rsync_puppetlabs.sh > /logs/mgmt_cron.log
 
