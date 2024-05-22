@@ -32,7 +32,7 @@ fi
 # Transfer backup file using rsync
 log_message "Transferring backup file using rsync..."
 
-sudo rsync -av -e "ssh -i /home/group-c/.ssh/id_rsa_app_backup" "$backup_file" $user@$backup_server:~/App_backup/ 2>&1 | tee -a "$log_file"
+# sudo rsync -av -e "ssh -i /home/group-c/.ssh/id_rsa_app_backup" "$backup_file" $user@$backup_server:~/App_backup/ 2>&1 | tee -a "$log_file"
 sudo rsync -av -e "ssh -i /home/group-c/.ssh/id_rsa_app_backup" "$backup_file" $user@$storage_server:~/app-c/ 2>&1 | tee -a "$log_file"
 rsync_exit_code=${PIPESTATUS[0]}
 

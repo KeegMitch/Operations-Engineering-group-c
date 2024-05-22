@@ -29,10 +29,10 @@ backup_dir="$HOME/rsync_backup"
 if [ ! -d "$backup_dir" ]; then
     # Create the directory
     sudo mkdir -p "$backup_dir"
-        echo "Check manual_puppetconf.log for output"
+	echo "Directory $backup_dir created."
     echo "Directory $backup_dir created." >> $log_file
 else
-        echo "Check manual_puppetconf.log for output"
+    echo "Directory $backup_dir already exists. Backing up puppet config ..."    
     echo "Directory $backup_dir already exists. Backing up puppet config ..." >> $log_file
 fi
 
@@ -40,19 +40,17 @@ fi
 # sudo tar -czvf "$HOME/mgmt_backups/$archive_name" "$modules_dir" "$site_pp"
 sudo tar -czvf "$backup_dir/$archive_name" "$puppet_dir" >> $log_file
 
-
-# rsync into backup server
-
-rsync -av -e "ssh -i /home/group-c/.ssh/id_rsa" "$backup_dir" $user@$backup_server:~/mgmt_backups/
-
 # rsync into storage server
 
 rsync -av -e "ssh -i /home/group-c/.ssh/id_rsa_offsite" "$backup_dir" $user@$storage_server:~/mgmt-c/
 
+# rsync into backup server(for testing only)
+# rsync -av -e "ssh -i /home/group-c/.ssh/id_rsa" "$backup_dir" $user@$backup_server:~/mgmt_backups/
+
 exit_status=$?
 
 if [[ $? -eq 0 ]]; then
-echo "Backup created: Check rsync_puppetconf.log for output"
+echo "Backup created: $backup_dir/$archive_name"
 echo "Backup created: $backup_dir/$archive_name" >> $log_file
 else
   echo "Backup failed with exit code: $exit_status , Check rsync_puppetconf.log for output"

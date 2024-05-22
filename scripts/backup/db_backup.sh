@@ -25,7 +25,7 @@ backup_host="backup-c"
 
 storage_server="20.211.153.89"
 storage_host="offsite"
-user="group-c"
+
 
 
 remote_directory="/home/$remote_username/database_backup"
@@ -59,21 +59,10 @@ for db in $databases; do
     log_message "Created MySQL dump for database $db"
 
     # Rsync to STORAGE server
-    if ! sudo rsync -av -e "ssh -i /home/group-c/.ssh/id_rsa_db_storage" "$HOME/$db.sql" "$user@$storage_server:$storage_directory/"; then
+    if ! sudo rsync -av -e "ssh -i /home/group-c/.ssh/id_rsa_db_storage" "$HOME/$db.sql" "$remote_username@$storage_server:$storage_directory/"; then
         handle_error "Failed to rsync backup to $storage_host"
     fi
     log_message "Rsynced backup to $storage_host"
-
-
-    # Rsync to BACKUP server
-    if sudo rsync -av -e "ssh -i /home/group-c/.ssh/id_rsa_db_1" "$HOME/$db.sql" "$remote_username@$backup_host:$remote_directory/"; then
-        log_message "Rsynced backup to $backup_host"
-        # Remove local backup file if rsync succeeded
-        log_message "Removed local backup file $db.sql"
-    else
-        handle_error "Failed to rsync backup to $backup_host"
-    fi
-
 
 done
 
