@@ -56,6 +56,7 @@ fi
 log_message "Restoring the files using rsync..."
 sudo rsync -avh $extract_path/ /etc/
 
+# Step 5: Reinstall dependencies if puppet does not work
 
 # Check if rsync command succeeded
 rsync_exit_code=$?

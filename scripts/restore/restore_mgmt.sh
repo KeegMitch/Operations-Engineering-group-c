@@ -42,3 +42,37 @@ else
     log_message "Error: Failed to restore Puppet configuration."
     exit 1
 fi
+
+
+# Add this: install puppet server on mgmt server as it will most likely not be installed on a new server
+
+
+if ! wget --spider -q https://apt.puppetlabs.com/puppet6-release-bionic.deb; then
+    echo "Failed to download puppet6-release-bionic.deb"
+    exit 1
+else
+    echo "puppet6-release-bionic.deb downloaded successfully"
+fi
+
+sudo wget -q https://apt.puppetlabs.com/puppet6-release-bionic.deb
+
+if dpkg-query -l puppet6-release-bionic &>/dev/null; then
+    echo "puppet6-release-bionic is already installed"
+else
+    sudo dpkg -i puppet6-release-bionic.deb
+fi
+
+sudo apt-get update
+
+
+if dpkg-query -l puppetserver &>/dev/null; then
+    echo "puppetserver is already installed"
+else
+    sudo apt-get install -y puppetserver
+fi
+
+if systemctl is-active --quiet puppetserver; then
+    echo "puppetserver is already running"
+else
+    sudo systemctl start puppetserver
+fi
