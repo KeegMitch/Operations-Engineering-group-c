@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define source directories
-puppet_dir="/etc/puppetlabs/"
+etc_dir="/etc/"
 # modules_dir="/etc/puppetlabs/code/modules"
 # site_pp="/etc/puppetlabs/code/environments/production/manifests/site.pp"
 user="group-c"
@@ -14,33 +14,33 @@ current_date=$(date +"%B_%d_%Y_%H%M%S")
 
 # create backup
 log_dir="$HOME/logs"
-log_file="$log_dir/rsync_puppetconf.log"
+log_file="$log_dir/rsync_etcconf.log"
 
 if [ ! -d "$log_dir" ]; then
     mkdir -p "$log_dir"
 fi
 
 # Define archive filename
-archive_name="puppetbackup_$current_date.tar.gz"
+archive_name="etcbackup_$current_date.tar.gz"
 
 # Create the puppet_backups directory if it doesn't exist
-backup_dir="$HOME/puppet_backups"
+backup_dir="$HOME/etc_backups"
 
 if [ ! -d "$backup_dir" ]; then
     # Create the directory
     sudo mkdir -p "$backup_dir"
-	echo "Directory $backup_dir created."
+        echo "Directory $backup_dir created."
     echo "Directory $backup_dir created." >> $log_file
 else
-    echo "Directory $backup_dir already exists. Backing up puppet config ..."    
+    echo "Directory $backup_dir already exists. Backing up puppet config ..."
     echo "Directory $backup_dir already exists. Backing up puppet config ..." >> $log_file
 fi
 
 # Create a compressed tar archive directly from source files
 # sudo tar -czvf "$HOME/mgmt_backups/$archive_name" "$modules_dir" "$site_pp"
-sudo tar -czvf "$backup_dir/$archive_name" "$puppet_dir" >> $log_file
+sudo tar -czvf "$backup_dir/$archive_name" "$etc_dir" >> $log_file
 
-# rsync into storage server
+# rsync into storage server (why is it not working?)
 
 rsync -av -e "ssh -i /home/group-c/.ssh/id_rsa_offsite" "$backup_dir" $user@$storage_server:~/mgmt-c/
 
@@ -62,6 +62,3 @@ fi
 # following commands in sudo crontab (runs 4 times a day or every 6 hours):
 # HOME=/home/group-c
 # 0 0,6,12,18 * * * home/group-c/rsync_puppetlabs.sh > /logs/mgmt_cron.log
-# or this syntax
-# 0 */6 * * * home/group-c/rsync_puppetlabs.sh > /logs/mgmt_cron.log
-

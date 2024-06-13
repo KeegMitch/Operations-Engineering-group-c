@@ -10,7 +10,7 @@ This is what is currently in each crontab file : sudo crontab -e or sudo crontab
 HOME=/home/group-c
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 0 0,6,12,18 * * * /home/group-c/rsync_puppetlabs.sh > mgmt_cron.log 2>&1
-
+45 1,7,13,19 * * * /home/group-c/rsync_nagios.sh > nagios_cron.log 2>&1
 
 # db-c server
 
